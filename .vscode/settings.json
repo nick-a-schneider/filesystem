@@ -1,0 +1,14 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": [],
+    "files.associations": {
+        "*.html": "html",
+        "*.eol": "json",
+        "stdio.h": "c",
+        "stdbool.h": "c",
+        "test_utils.h": "c",
+        "tier_allocator.h": "c",
+        "errno.h": "c"
+    }
+}
