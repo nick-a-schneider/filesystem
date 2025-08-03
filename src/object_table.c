@@ -12,7 +12,7 @@
 #define MEM_SET(src, dest, size) for (uint16_t i = 0; i < size; i++) ((uint8_t*)dest)[i] = ((uint8_t*)src)[i]
 
 static inline int verifyID(MemmoryObjectTable* table, objectID id) {
-    if (!table || !id) return -EINVAL;
+    if (!table || id < 0) return -EINVAL;
     if (id >= table->size) return -EBADF;
     if (!CHECK_BIT(id)) return -ENOFILE;
     return 0;
