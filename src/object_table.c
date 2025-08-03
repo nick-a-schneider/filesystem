@@ -9,6 +9,8 @@
 #define SET_BIT(bit)    (table->used |= (1UL << bit))
 #define CLR_BIT(bit)    (table->used &= ~(1UL << bit))
 
+#define MEM_SET(src, dest, size) for (uint16_t i = 0; i < size; i++) ((uint8_t*)dest)[i] = ((uint8_t*)src)[i]
+
 static inline int verifyID(MemmoryObjectTable* table, objectID id) {
     if (!table || !id) return -EINVAL;
     if (id >= table->size) return -EBADF;
@@ -51,11 +53,20 @@ int writeMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t 
     if (err) return err;
     if (!data) return -EINVAL;
     MemObject* object = &table->objects[id];
-    uint8_t* head = (uint8_t*)object->head;
-    for (uint16_t i = 0; i < size; i++) {
-        head[i] = ((uint8_t*)data)[i];
-    }
+    uint8_t* head = ((uint8_t*)object->head);
+    MEM_SET((uint8_t*)data, head, size);
     object->used = size;
+    return 0;
+}
+
+int appendMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t size) {
+    int err = verifyMemObjectSize(table, id, size);
+    if (err) return err;
+    if (!data) return -EINVAL;
+    MemObject* object = &table->objects[id];
+    uint8_t* head = ((uint8_t*)object->head) + object->used;
+    MEM_SET((uint8_t*)data, head, size);
+    object->used += size;
     return 0;
 }
 
@@ -66,9 +77,7 @@ int readMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t s
     MemObject* object = &table->objects[id];
     if (object->used < size) size = object->used;
     uint8_t* head = (uint8_t*)object->head;
-    for (uint16_t i = 0; i < size; i++) {
-        ((uint8_t*)data)[i] = head[i];
-    }
+    MEM_SET(head, (uint8_t*)data, size);
     return 0;
 }
 

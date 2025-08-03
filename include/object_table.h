@@ -24,6 +24,7 @@ typedef struct {
 int aquireMemObject(MemmoryObjectTable* table, uint16_t size, objectID* id_out);
 int releaseMemObject(MemmoryObjectTable* table, objectID id);
 int writeMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t size);
+int appendMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t size);
 int readMemObject(MemmoryObjectTable* table, objectID id, void* data, uint16_t size);
 int verifyMemObjectSize(MemmoryObjectTable* table, objectID id, uint16_t size);
 MemObject* getMemObjectHandle(MemmoryObjectTable* table, objectID id);
